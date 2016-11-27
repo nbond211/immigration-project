@@ -1,0 +1,19 @@
+.axis--x path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.immigration-bar {
+    stroke: none;
+    fill: steelblue;
+}
+
+.quota-bar {
+    stroke: black;
+    fill: none;
+}
