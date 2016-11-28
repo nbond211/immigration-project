@@ -9,6 +9,7 @@ Map Validaty:
 Default Chart Display
 - Have all charts but the map inform user that no country has been select on load
 General
+- have selecting a country from the map filter the other two data sets (quota & nonquota) so that the related charts display correctly
 - Add titles to all graphs
     - working titles are in comments of script above each function generating said chart
 -fix/add labels
