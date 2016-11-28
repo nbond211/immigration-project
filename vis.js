@@ -396,14 +396,16 @@ function buildMap() {
       console.log(mapdata);
 
       var svg = d3.select("#map-svg").selectAll("path")
-                   .data(mapdata.features)
-                   .enter()
-                   .append("path")
-                   .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ]) //comment centrer la carte, longitude, latitude
-                                   .translate([ 960/2, 600/2 ]) // centrer l'image obtenue dans le svg
-                                   .scale([ 960/1.25 ])))
-                   .attr("stroke", "rgba(8, 81, 156, 0.2)")
-                   .attr("fill", "rgba(8, 81, 156, 0.6)").
-                   attr("class", function(d){return d.properties.admin});
-  });
+      .data(mapdata.features)
+      .enter()
+      .append("path")
+       .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ]) //comment centrer la carte, longitude, latitude
+                       .translate([ 960/2, 600/2 ]) // centrer l'image obtenue dans le svg
+                       .scale([ 960/1.25 ])))
+       .attr("stroke", "rgba(8, 81, 156, 0.2)")
+       .attr("fill", "rgba(8, 81, 156, 0.6)").
+       attr("class", function(d){return d.properties.admin})
+      .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill","rgba(8, 81, 156, 0.2)")})
+      .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill","#DDD")});
+   });
 }
