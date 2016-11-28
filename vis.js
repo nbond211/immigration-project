@@ -6,7 +6,7 @@ d3.queue()
     .defer(d3.csv, "nonquota.csv")
     .await(function (error, immigrationData, quotaData, nonQuotaData) {
         if (error) {
-            console.error('Oh dear, something went wrong: ' + error);
+            console.error('Oh dear, something went wrong with the immigrant data: ' + error);
         } else {
             buildMap(immigrationData, quotaData, nonQuotaData)
         }
@@ -17,8 +17,11 @@ d3.queue()
 function buildMap(immigrationData, quotaData, nonQuotaData) {
 // referenced from https://bl.ocks.org/MariellaCC/0055298b94fcf2c16940
     d3.json("europetopo.json", function(error, mapdata) {
-      if (error) return console.error(error);
-      console.log(mapdata);
+      if (error) {
+            console.error('Oh dear, something went wrong with the map data:' + error);
+            return
+        }
+      console.log(immigrationData);
 
       var svg = d3.select("#map-svg").selectAll("path")
       .data(mapdata.features)
@@ -32,17 +35,14 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
        attr("class", function(d){return d.properties.name})
       .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill","rgba(8, 81, 156, 0.2)")})
       .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill","rgba(8, 81, 156, 0.6)")})
-      .on("click", function(d){console.log('clicked' + d.properties.name)});
+      .on("click", selectData(d));
    });
-     buildImmigrationMap(immigrationData, quotaData, nonQuotaData)
+     buildImmigrationChart(immigrationData, quotaData, nonQuotaData)
 }
         /////////////////////////////////////
         // Immigration Over Time   //
         ///////////////////////////////////
-function buildImmigrationMap(immigrationData, quotaData, nonQuotaData) {
-
-        console.log(nonQuotaData);
-
+function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
         var svg = d3.select("#immigration-svg"),
             margin = {
                 top: 20,
@@ -213,7 +213,6 @@ function buildImmigrationMap(immigrationData, quotaData, nonQuotaData) {
                 };
                 newData.push(obj);
             }
-            console.log(newData);
 
             buildQuotaChart(newData);
 
@@ -332,8 +331,6 @@ function buildNonQuotaChart(newData) {
         .y(function (d) {
             return yNonQuota(d.immigration);
         });
-
-    console.log(newData.columns);
 
     if (newData.length == 0) {
         return;
