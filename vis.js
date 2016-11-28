@@ -8,199 +8,228 @@ d3.queue()
         if (error) {
             console.error('Oh dear, something went wrong: ' + error);
         } else {
-            //////////////////////////////////////////////////////////////////////////////////////////////////////
-            // Immigration Vis
-
-            console.log(nonQuotaData);
-
-            var svg = d3.select("#immigration-svg"),
-                margin = {
-                    top: 20,
-                    right: 80,
-                    bottom: 30,
-                    left: 50
-                },
-                width = svg.attr("width") - margin.left - margin.right,
-                height = svg.attr("height") - margin.top - margin.bottom,
-                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-            var xImmigration = d3.scaleTime().range([0, width]),
-                yImmigration = d3.scaleLinear().range([height, 0]),
-                zImmigration = d3.scaleOrdinal(d3.schemeCategory10);
-
-            var line = d3.line()
-                .curve(d3.curveBasis)
-                .x(function (d) {
-                    return xImmigration(d.year);
-                })
-                .y(function (d) {
-                    return yImmigration(d.immigration);
-                });
-
-            var countries = immigrationData.columns.slice(1).map(function (id) {
-                return {
-                    id: id,
-                    values: immigrationData.map(function (d) {
-                        return {
-                            year: parseTime(d.Year),
-                            immigration: +d[id]
-                        };
-                    })
-                };
-            });
-
-            var quotas = quotaData.columns.slice(1).map(function (id) {
-                return {
-                    id: id,
-                    values: quotaData.map(function (d) {
-                        return {
-                            year: parseTime(d.Year),
-                            quota: +d[id]
-                        };
-                    })
-                };
-            });
-
-            var brush = d3.brushX()
-                .extent([[0, 0], [width, height]])
-                .on("brush end", brushed);
-
-            var context = svg.append("g")
-                .attr("class", "context")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-            context.append("g")
-                .attr("class", "brush")
-                .call(brush)
-                .call(brush.move, xImmigration.range());
-
-
-            xImmigration.domain(d3.extent(immigrationData, function (d) {
-                return parseTime(d.Year);
-            }));
-
-            yImmigration.domain([
-            d3.min(countries, function (c) {
-                    return d3.min(c.values, function (d) {
-                        return d.immigration;
-                    });
-                }),
-            d3.max(countries, function (c) {
-                    return d3.max(c.values, function (d) {
-                        return d.immigration;
-                    });
-                })
-          ]);
-
-            zImmigration.domain(countries.map(function (c) {
-                return c.id;
-            }));
-
-            g.append("g")
-                .attr("class", "axis axis--x")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(xImmigration));
-
-            g.append("g")
-                .attr("class", "axis axis--y")
-                .call(d3.axisLeft(yImmigration))
-                .append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 6)
-                .attr("dy", "0.71em")
-                .attr("fill", "#000")
-                .text("Immigration, number of people");
-
-            var city = g.selectAll(".country")
-                .data(countries)
-                .enter().append("g")
-                .attr("class", "country");
-
-            city.append("path")
-                .attr("class", "line")
-                .attr("d", function (d) {
-                    return line(d.values);
-                })
-                .style("stroke", function (d) {
-                    return zImmigration(d.id);
-                });
-
-            city.append("text")
-                .datum(function (d) {
-                    return {
-                        id: d.id,
-                        value: d.values[d.values.length - 1]
-                    };
-                })
-                .attr("transform", function (d) {
-                    return "translate(" + xImmigration(d.value.year) + "," + yImmigration(d.value.immigration) + ")";
-                })
-                .attr("x", 3)
-                .attr("dy", "0.35em")
-                .style("font", "10px sans-serif")
-                .text(function (d) {
-                    return d.id;
-                });
-
-            function type(d, _, columns) {
-                d.year = parseTime(d.year);
-                for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
-                return d;
-            }
-
-            function brushed() {
-                if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-                var s = d3.event.selection || xImmigration.range();
-                //xNonQuota.domain(s.map(x2.invert, x2));
-                //focus.select(".area").attr("d", area);
-                //focus.select(".axis--x").call(xAxis);
-                /*svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
-                    .scale(width / (s[1] - s[0]))
-                    .translate(-s[0], 0));*/
-                var minYear = s[0];
-                var maxYear = s[1];
-                var newData = [];
-
-                for (var i = 0; i < countries.length; i++) {
-                    var country = countries[i].id;
-                    var immigrationValues = countries[i].values;
-                    var quotaValues = quotas[i].values;
-                    var totalImmigration = 0;
-                    var totalQuota = 0;
-
-                    for (var j = 0; j < immigrationValues.length; j++) {
-                        if (xImmigration(immigrationValues[j].year) >= minYear && xImmigration(immigrationValues[j].year) <= maxYear) {
-
-                            totalImmigration += immigrationValues[j].immigration;
-                            totalQuota += quotaValues[j].quota;
-                        }
-                    }
-
-                    var obj = {
-                        country: country,
-                        immigration: totalImmigration,
-                        quota: totalQuota
-                    };
-                    newData.push(obj);
-                }
-                console.log(newData);
-
-                buildQuotaChart(newData);
-
-                var dataFiltered = nonQuotaData.filter(function (d) {
-                    return (xImmigration(parseTime(d.Year)) >= minYear && xImmigration(parseTime(d.Year)) <= maxYear);
-                });
-
-                buildNonQuotaChart(dataFiltered);
-
-            }
-
-            buildNonQuotaChart(nonQuotaData);
+            buildMap(immigrationData, quotaData, nonQuotaData)
         }
-        buildMap();
+});
+     /////////////////////////////////////
+        // Countries Of Origin          //
+        ///////////////////////////////////
+function buildMap(immigrationData, quotaData, nonQuotaData) {
+// referenced from https://bl.ocks.org/MariellaCC/0055298b94fcf2c16940
+    d3.json("europetopo.json", function(error, mapdata) {
+      if (error) return console.error(error);
+      console.log(mapdata);
 
-    });
+      var svg = d3.select("#map-svg").selectAll("path")
+      .data(mapdata.features)
+      .enter()
+      .append("path")
+       .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ])
+                       .translate([ 960/2, 600/2 ])
+                       .scale([ 960/1.25 ])))
+       .attr("stroke", "rgba(8, 81, 156, 0.2)")
+       .attr("fill", "rgba(8, 81, 156, 0.6)").
+       attr("class", function(d){return d.properties.name})
+      .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill","rgba(8, 81, 156, 0.2)")})
+      .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill","rgba(8, 81, 156, 0.6)")})
+      .on("click", function(d){console.log('clicked' + d.properties.name)});
+   });
+     buildImmigrationMap(immigrationData, quotaData, nonQuotaData)
+}
+        /////////////////////////////////////
+        // Immigration Over Time   //
+        ///////////////////////////////////
+function buildImmigrationMap(immigrationData, quotaData, nonQuotaData) {
 
+        console.log(nonQuotaData);
+
+        var svg = d3.select("#immigration-svg"),
+            margin = {
+                top: 20,
+                right: 80,
+                bottom: 30,
+                left: 50
+            },
+            width = svg.attr("width") - margin.left - margin.right,
+            height = svg.attr("height") - margin.top - margin.bottom,
+            g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var xImmigration = d3.scaleTime().range([0, width]),
+            yImmigration = d3.scaleLinear().range([height, 0]),
+            zImmigration = d3.scaleOrdinal(d3.schemeCategory10);
+
+        var line = d3.line()
+            .curve(d3.curveBasis)
+            .x(function (d) {
+                return xImmigration(d.year);
+            })
+            .y(function (d) {
+                return yImmigration(d.immigration);
+            });
+
+        var countries = immigrationData.columns.slice(1).map(function (id) {
+            return {
+                id: id,
+                values: immigrationData.map(function (d) {
+                    return {
+                        year: parseTime(d.Year),
+                        immigration: +d[id]
+                    };
+                })
+            };
+        });
+
+        var quotas = quotaData.columns.slice(1).map(function (id) {
+            return {
+                id: id,
+                values: quotaData.map(function (d) {
+                    return {
+                        year: parseTime(d.Year),
+                        quota: +d[id]
+                    };
+                })
+            };
+        });
+
+        var brush = d3.brushX()
+            .extent([[0, 0], [width, height]])
+            .on("brush end", brushed);
+
+        var context = svg.append("g")
+            .attr("class", "context")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        context.append("g")
+            .attr("class", "brush")
+            .call(brush)
+            .call(brush.move, xImmigration.range());
+
+
+        xImmigration.domain(d3.extent(immigrationData, function (d) {
+            return parseTime(d.Year);
+        }));
+
+        yImmigration.domain([
+        d3.min(countries, function (c) {
+                return d3.min(c.values, function (d) {
+                    return d.immigration;
+                });
+            }),
+        d3.max(countries, function (c) {
+                return d3.max(c.values, function (d) {
+                    return d.immigration;
+                });
+            })
+      ]);
+
+        zImmigration.domain(countries.map(function (c) {
+            return c.id;
+        }));
+
+        g.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(xImmigration));
+
+        g.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(yImmigration))
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "0.71em")
+            .attr("fill", "#000")
+            .text("Immigration, number of people");
+
+        var city = g.selectAll(".country")
+            .data(countries)
+            .enter().append("g")
+            .attr("class", "country");
+
+        city.append("path")
+            .attr("class", "line")
+            .attr("d", function (d) {
+                return line(d.values);
+            })
+            .style("stroke", function (d) {
+                return zImmigration(d.id);
+            });
+
+        city.append("text")
+            .datum(function (d) {
+                return {
+                    id: d.id,
+                    value: d.values[d.values.length - 1]
+                };
+            })
+            .attr("transform", function (d) {
+                return "translate(" + xImmigration(d.value.year) + "," + yImmigration(d.value.immigration) + ")";
+            })
+            .attr("x", 3)
+            .attr("dy", "0.35em")
+            .style("font", "10px sans-serif")
+            .text(function (d) {
+                return d.id;
+            });
+
+        function type(d, _, columns) {
+            d.year = parseTime(d.year);
+            for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
+            return d;
+        }
+
+        function brushed() {
+            if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+            var s = d3.event.selection || xImmigration.range();
+            //xNonQuota.domain(s.map(x2.invert, x2));
+            //focus.select(".area").attr("d", area);
+            //focus.select(".axis--x").call(xAxis);
+            /*svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+                .scale(width / (s[1] - s[0]))
+                .translate(-s[0], 0));*/
+            var minYear = s[0];
+            var maxYear = s[1];
+            var newData = [];
+
+            for (var i = 0; i < countries.length; i++) {
+                var country = countries[i].id;
+                var immigrationValues = countries[i].values;
+                var quotaValues = quotas[i].values;
+                var totalImmigration = 0;
+                var totalQuota = 0;
+
+                for (var j = 0; j < immigrationValues.length; j++) {
+                    if (xImmigration(immigrationValues[j].year) >= minYear && xImmigration(immigrationValues[j].year) <= maxYear) {
+
+                        totalImmigration += immigrationValues[j].immigration;
+                        totalQuota += quotaValues[j].quota;
+                    }
+                }
+
+                var obj = {
+                    country: country,
+                    immigration: totalImmigration,
+                    quota: totalQuota
+                };
+                newData.push(obj);
+            }
+            console.log(newData);
+
+            buildQuotaChart(newData);
+
+            var dataFiltered = nonQuotaData.filter(function (d) {
+                return (xImmigration(parseTime(d.Year)) >= minYear && xImmigration(parseTime(d.Year)) <= maxYear);
+            });
+
+            buildNonQuotaChart(dataFiltered);
+
+        }
+
+        buildNonQuotaChart(nonQuotaData);
+    }
+        ////////////////////////////////////////////////////////////
+        // Actual Immigration Level vs Allotted Quota   //
+        //////////////////////////////////////////////////////////
 function buildQuotaChart(newData) {
     $("#quota-svg").empty();
     var quotaSvg = d3.select("#quota-svg"),
@@ -275,7 +304,9 @@ function buildQuotaChart(newData) {
             return quotaHeight - yQuota(d.quota);
         });
 }
-
+        //////////////////////////////////////////////
+        // Immigrants Exempt from Quota   //
+        /////////////////////////////////////////////
 function buildNonQuotaChart(newData) {
     $("#non-quota-svg").empty();
     var nonQuotaSvg = d3.select("#non-quota-svg"),
@@ -388,24 +419,4 @@ function buildNonQuotaChart(newData) {
         .text(function (d) {
             return d.id;
         });
-}
-function buildMap() {
-// referenced from https://bl.ocks.org/MariellaCC/0055298b94fcf2c16940
-    d3.json("europetopo.json", function(error, mapdata) {
-      if (error) return console.error(error);
-      console.log(mapdata);
-
-      var svg = d3.select("#map-svg").selectAll("path")
-      .data(mapdata.features)
-      .enter()
-      .append("path")
-       .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ])
-                       .translate([ 960/2, 600/2 ])
-                       .scale([ 960/1.25 ])))
-       .attr("stroke", "rgba(8, 81, 156, 0.2)")
-       .attr("fill", "rgba(8, 81, 156, 0.6)").
-       attr("class", function(d){return d.properties.admin})
-      .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill","rgba(8, 81, 156, 0.2)")})
-      .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill","rgba(8, 81, 156, 0.6)")});
-   });
 }
