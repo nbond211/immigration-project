@@ -1,4 +1,5 @@
 ### immigration-project
+This project visualizes immigration to the US from Europe in the early 20th century. This project has a specific focus on the quota system instituted by the Immigration Act of 1924
 #TODO
 Map Validaty:
 - Czech republic needs to be combined with slovakia to more accurately reflect that the data is from czechoslovakia
@@ -7,3 +8,9 @@ Map Validaty:
 - Soviet Union - data is currently just linked to russia in map. Need to add Union countries to map to make complete Soviet Union rendering
 Default Chart Display
 - Have all charts but the map inform user that no country has been select on load
+General
+- Add titles to all graphs
+-fix/add labels
+    -non-quota chart has "tempurature" as y axis label
+- Add storyingtelling text between/above/below charts (?)
+- Animation
