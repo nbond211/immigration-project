@@ -406,6 +406,6 @@ function buildMap() {
        .attr("fill", "rgba(8, 81, 156, 0.6)").
        attr("class", function(d){return d.properties.admin})
       .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill","rgba(8, 81, 156, 0.2)")})
-      .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill","#DDD")});
+      .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill","rgba(8, 81, 156, 0.6)")});
    });
 }
