@@ -10,6 +10,7 @@ Default Chart Display
 - Have all charts but the map inform user that no country has been select on load
 General
 - Add titles to all graphs
+    - working titles are in comments of script above each function generating said chart
 -fix/add labels
     -non-quota chart has "tempurature" as y axis label
 - Add storyingtelling text between/above/below charts (?)
