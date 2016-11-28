@@ -399,8 +399,8 @@ function buildMap() {
       .data(mapdata.features)
       .enter()
       .append("path")
-       .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ]) //comment centrer la carte, longitude, latitude
-                       .translate([ 960/2, 600/2 ]) // centrer l'image obtenue dans le svg
+       .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ])
+                       .translate([ 960/2, 600/2 ])
                        .scale([ 960/1.25 ])))
        .attr("stroke", "rgba(8, 81, 156, 0.2)")
        .attr("fill", "rgba(8, 81, 156, 0.6)").
