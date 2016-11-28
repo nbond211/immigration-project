@@ -190,14 +190,14 @@ d3.queue()
                 var dataFiltered = nonQuotaData.filter(function (d) {
                     return (xImmigration(parseTime(d.Year)) >= minYear && xImmigration(parseTime(d.Year)) <= maxYear);
                 });
-                
+
                 buildNonQuotaChart(dataFiltered);
 
             }
 
             buildNonQuotaChart(nonQuotaData);
         }
-
+        buildMap();
 
     });
 
@@ -301,13 +301,13 @@ function buildNonQuotaChart(newData) {
         .y(function (d) {
             return yNonQuota(d.immigration);
         });
-    
+
     console.log(newData.columns);
-    
+
     if (newData.length == 0) {
         return;
     }
-    
+
     var namesOfClasses = ["Year", "Ministers and Professors and their wives and children", "Ministers and their wives and children", "Professors and their wives and children", "Students"];
 
     var classes = namesOfClasses.slice(1).map(function (id) {
@@ -388,4 +388,22 @@ function buildNonQuotaChart(newData) {
         .text(function (d) {
             return d.id;
         });
+}
+function buildMap() {
+
+    d3.json("europetopo.json", function(error, mapdata) {
+      if (error) return console.error(error);
+      console.log(mapdata);
+
+      var svg = d3.select("#map-svg").selectAll("path")
+                   .data(mapdata.features)
+                   .enter()
+                   .append("path")
+                   .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ]) //comment centrer la carte, longitude, latitude
+                                   .translate([ 960/2, 600/2 ]) // centrer l'image obtenue dans le svg
+                                   .scale([ 960/1.25 ])))
+                   .attr("stroke", "rgba(8, 81, 156, 0.2)")
+                   .attr("fill", "rgba(8, 81, 156, 0.6)").
+                   attr("class", function(d){return d.properties.admin});
+  });
 }
