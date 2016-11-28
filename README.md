@@ -18,3 +18,5 @@ General:
     -non-quota chart has "tempurature" as y axis label
 - Add storyingtelling text between/above/below charts (?)
 - Animation
+- Add thing that tells us what years we are brushing
+- add line for year quotas start
