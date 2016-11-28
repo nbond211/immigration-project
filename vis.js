@@ -33,7 +33,12 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
       })
       var selectedNonQuotaData = [];
 
-      var svg = d3.select("#map-svg").selectAll("path")
+      var svg = d3.select("#map-svg")
+      .attr("preserveAspectRatio", "xMinYMin meet")
+      .attr("viewBox", "0 0 " + 960 + " "  + 600)
+      //class to make it responsive
+     .classed("svg-content-responsive", true)
+      .selectAll("path")
       .data(mapdata.features)
       .enter()
       .append("path")
@@ -97,17 +102,22 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
         ///////////////////////////////////
 function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
         d3.select('#immigration-vis-container').select('svg').remove();
-        d3.select('#immigration-vis-container').append('svg').attr('id', 'immigration-svg').attr('width', 960).attr('height', 600);
-        var svg = d3.select("#immigration-svg"),
+        d3.select('#immigration-vis-container').append('svg').attr('id', 'immigration-svg');
+        var svg = d3.select("#immigration-svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + 960 + " "  + 600)
+        //class to make it responsive
+       .classed("svg-content-responsive", true),
             margin = {
                 top: 20,
                 right: 80,
                 bottom: 30,
                 left: 50
             },
-            width = svg.attr("width") - margin.left - margin.right,
-            height = svg.attr("height") - margin.top - margin.bottom,
+            width = 960 - margin.left - margin.right,
+            height = 600 - margin.top - margin.bottom,
             g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                        console.log(svg.attr("width"))
 
         var xImmigration = d3.scaleTime().range([0, width]),
             yImmigration = d3.scaleLinear().range([height, 0]),
