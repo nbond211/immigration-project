@@ -35,9 +35,10 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
        attr("class", function(d){return d.properties.name})
       .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill","rgba(8, 81, 156, 0.2)")})
       .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill","rgba(8, 81, 156, 0.6)")})
-      .on("click", selectData(d));
+      .on("click", function(d){console.log('clicked' + d.properties.name)});
    });
      buildImmigrationChart(immigrationData, quotaData, nonQuotaData)
+
 }
         /////////////////////////////////////
         // Immigration Over Time   //
