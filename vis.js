@@ -27,7 +27,10 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
         selectedImmigrationData.push({"Year": element.Year})
       })
       var selectedQuotaData = [];
-      selectedQuotaData.columns = [];
+      selectedQuotaData.columns=["Year"];
+      quotaData.forEach(function(element){
+        selectedQuotaData.push({"Year": element.Year})
+      })
       var selectedNonQuotaData = [];
 
       var svg = d3.select("#map-svg").selectAll("path")
@@ -46,7 +49,8 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
       function selectData(d){
         selectThis = d3.select(this)
         var countryName = d.properties.name
-        //add/remove year-by-year data
+
+        ////////FILTERING IMMIGRATION DATA
         immigrationData.forEach(function(dataEl){//for each year object in main data
           selectedImmigrationData.forEach(function(selectEl){// and for each year object in selected data
             if(dataEl.Year == selectEl.Year) // find the corresponding year object in the main anad selected data
@@ -65,9 +69,27 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
        } else {//otherwise add it
         selectedImmigrationData.columns.push(countryName)
       }
-      buildImmigrationChart(selectedImmigrationData, quotaData, nonQuotaData)// re-render rest of charts
+      ///////////////FILTERING QUOTA DATA
+      quotaData.forEach(function(dataEl){//for each year object in main data
+          selectedQuotaData.forEach(function(selectEl){// and for each year object in selected data
+            if(dataEl.Year == selectEl.Year) // find the corresponding year object in the main anad selected data
+              if(selectEl[countryName]){//if the selected country is already in the selected data
+                delete selectEl[countryName]//remove it from selected list
+              } else {// otherwise add it to the selected list
+                selectEl[countryName] = dataEl[countryName]
+              }
+            })
+        })
+        var index = selectedQuotaData.columns.indexOf(countryName);//find the index of the country name in the columns field
+        if (index > -1) {//if its found
+         selectedQuotaData.columns.splice(index, 1); //remove it
+       } else {//otherwise add it
+        selectedQuotaData.columns.push(countryName)
+      }
+      console.log(quotaData, selectedQuotaData)
+      buildImmigrationChart(selectedImmigrationData, selectedQuotaData, nonQuotaData)// re-render rest of charts
     }
-    buildImmigrationChart(immigrationData, quotaData, nonQuotaData)// first render of charts
+    buildImmigrationChart(selectedImmigrationData, quotaData, nonQuotaData)// first render of charts
   })
 };
         /////////////////////////////////////
