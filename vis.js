@@ -19,9 +19,16 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
     d3.json("europetopo.json", function(error, mapdata) {
       if (error) {
             console.error('Oh dear, something went wrong with the map data:' + error);
-            return
+            return;
         }
-      console.log(immigrationData);
+      var selectedImmigrationData = []
+      selectedImmigrationData.columns=["Year"];
+      immigrationData.forEach(function(element){
+        selectedImmigrationData.push({"Year": element.Year})
+      })
+      var selectedQuotaData = [];
+      selectedQuotaData.columns = [];
+      var selectedNonQuotaData = [];
 
       var svg = d3.select("#map-svg").selectAll("path")
       .data(mapdata.features)
@@ -33,17 +40,42 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
        .attr("stroke", "rgba(8, 81, 156, 0.2)")
        .attr("fill", "rgba(8, 81, 156, 0.6)").
        attr("class", function(d){return d.properties.name})
-      .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill","rgba(8, 81, 156, 0.2)")})
-      .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill","rgba(8, 81, 156, 0.6)")})
-      .on("click", function(d){console.log('clicked' + d.properties.name)});
-   });
-     buildImmigrationChart(immigrationData, quotaData, nonQuotaData)
-
-}
+      .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill-opacity","0.5")})
+      .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill-opacity","1")})
+      .on("click", selectData);
+      function selectData(d){
+        selectThis = d3.select(this)
+        var countryName = d.properties.name
+        //add/remove year-by-year data
+        immigrationData.forEach(function(dataEl){//for each year object in main data
+          selectedImmigrationData.forEach(function(selectEl){// and for each year object in selected data
+            if(dataEl.Year == selectEl.Year) // find the corresponding year object in the main anad selected data
+              if(selectEl[countryName]){//if the selected country is already in the selected data
+                delete selectEl[countryName]//remove it from selected list
+                selectThis.style("fill","rgba(8, 81, 156, 0.6)")
+              } else {// otherwise add it to the selected list
+                selectEl[countryName] = dataEl[countryName]
+                selectThis.style("fill","rgba(156, 81, 8, 0.6)")
+              }
+            })
+        })
+        var index = selectedImmigrationData.columns.indexOf(countryName);//find the index of the country name in the columns field
+        if (index > -1) {//if its found
+         selectedImmigrationData.columns.splice(index, 1); //remove it
+       } else {//otherwise add it
+        selectedImmigrationData.columns.push(countryName)
+      }
+      buildImmigrationChart(selectedImmigrationData, quotaData, nonQuotaData)// re-render rest of charts
+    }
+    buildImmigrationChart(immigrationData, quotaData, nonQuotaData)// first render of charts
+  })
+};
         /////////////////////////////////////
         // Immigration Over Time   //
         ///////////////////////////////////
 function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
+        d3.select('#immigration-vis-container').select('svg').remove();
+        d3.select('#immigration-vis-container').append('svg').attr('id', 'immigration-svg').attr('width', 960).attr('height', 600);
         var svg = d3.select("#immigration-svg"),
             margin = {
                 top: 20,
@@ -79,7 +111,6 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
                 })
             };
         });
-
         var quotas = quotaData.columns.slice(1).map(function (id) {
             return {
                 id: id,
