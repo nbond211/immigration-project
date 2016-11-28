@@ -390,7 +390,7 @@ function buildNonQuotaChart(newData) {
         });
 }
 function buildMap() {
-
+// referenced from https://bl.ocks.org/MariellaCC/0055298b94fcf2c16940
     d3.json("europetopo.json", function(error, mapdata) {
       if (error) return console.error(error);
       console.log(mapdata);
