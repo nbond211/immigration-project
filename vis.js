@@ -117,7 +117,6 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             width = 960 - margin.left - margin.right,
             height = 600 - margin.top - margin.bottom,
             g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                        console.log(svg.attr("width"))
 
         var xImmigration = d3.scaleTime().range([0, width]),
             yImmigration = d3.scaleLinear().range([height, 0]),
@@ -295,15 +294,19 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
         //////////////////////////////////////////////////////////
 function buildQuotaChart(newData) {
     $("#quota-svg").empty();
-    var quotaSvg = d3.select("#quota-svg"),
+    var quotaSvg = d3.select("#quota-svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + 960 + " "  + 600)
+        //class to make it responsive
+       .classed("svg-content-responsive", true),
         quotaMargin = {
             top: 20,
             right: 20,
             bottom: 30,
             left: 40
         },
-        quotaWidth = +quotaSvg.attr("width") - quotaMargin.left - quotaMargin.right,
-        quotaHeight = +quotaSvg.attr("height") - quotaMargin.top - quotaMargin.bottom;
+        quotaWidth = 960 - quotaMargin.left - quotaMargin.right,
+        quotaHeight = 600 - quotaMargin.top - quotaMargin.bottom;
 
     var xQuota = d3.scaleBand().rangeRound([0, quotaWidth]).padding(0.1),
         yQuota = d3.scaleLinear().rangeRound([quotaHeight, 0]);
@@ -372,15 +375,19 @@ function buildQuotaChart(newData) {
         /////////////////////////////////////////////
 function buildNonQuotaChart(newData) {
     $("#non-quota-svg").empty();
-    var nonQuotaSvg = d3.select("#non-quota-svg"),
+    var nonQuotaSvg = d3.select("#non-quota-svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + 960 + " "  + 600)
+        //class to make it responsive
+       .classed("svg-content-responsive", true),
         nonQuotaMargin = {
             top: 20,
             right: 80,
             bottom: 30,
             left: 50
         },
-        nonQuotaWidth = nonQuotaSvg.attr("width") - nonQuotaMargin.left - nonQuotaMargin.right,
-        nonQuotaHeight = nonQuotaSvg.attr("height") - nonQuotaMargin.top - nonQuotaMargin.bottom,
+        nonQuotaWidth = 960 - nonQuotaMargin.left - nonQuotaMargin.right,
+        nonQuotaHeight = 600 - nonQuotaMargin.top - nonQuotaMargin.bottom,
         nonQuotaG = nonQuotaSvg.append("g").attr("transform", "translate(" + nonQuotaMargin.left + "," + nonQuotaMargin.top + ")");
 
     var xNonQuota = d3.scaleTime().range([0, nonQuotaWidth]),
