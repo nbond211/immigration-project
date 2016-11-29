@@ -165,7 +165,7 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
         context.append("g")
             .attr("class", "brush")
             .call(brush)
-            .call(brush.move, xImmigration.range());
+            .call(brush.move, [0,0]);
 
 
         xImmigration.domain(d3.extent(immigrationData, function (d) {
@@ -288,6 +288,7 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
         }
 
         buildNonQuotaChart(nonQuotaData);
+        brushed();
     }
         ////////////////////////////////////////////////////////////
         // Actual Immigration Level vs Allotted Quota   //
