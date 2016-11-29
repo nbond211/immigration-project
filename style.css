@@ -57,3 +57,239 @@
     top: 10px;
     left: 0;
 }
+
+.Albania.line {
+    stroke: #8c0000;
+}
+
+.Austria.line {
+    stroke: #f27979;
+}
+
+.Belgium.line {
+    stroke: #401100;
+}
+
+.Czechoslovakia.line {
+    stroke: #cc5200;
+}
+
+.Danzig.line {
+    stroke: #bfa38f;
+}
+
+.Denmark.line {
+    stroke: #cc8533;
+}
+
+.Estonia.line {
+    stroke: #ffcc00;
+}
+
+.Finland.line {
+    stroke: #735c00;
+}
+
+.France.line {
+    stroke: #332e1a;
+}
+
+.Germany.line {
+    stroke: #85a600;
+}
+
+.Greece.line {
+    stroke: #f2ffbf;
+}
+
+.Hungary.line {
+    stroke: #3df255;
+}
+
+.Ireland.line {
+    stroke: #4d9957;
+}
+
+.Italy.line {
+    stroke: #00593c;
+}
+
+.Latvia.line {
+    stroke: #6cd9c3;
+}
+
+.Lithuania.line {
+    stroke: #23858c;
+}
+
+.Luxembourg.line {
+    stroke: #40d9ff;
+}
+
+.Netherlands.line {
+    stroke: #368dd9;
+}
+
+.Norway.line {
+    stroke: #1a2733;
+}
+
+.Poland.line {
+    stroke: #bfd9ff;
+}
+
+.Portugal.line {
+    stroke: #5940ff;
+}
+
+.Romania.line {
+    stroke: #3d6df2;
+}
+
+.Spain.line {
+    stroke: #1d3473;
+}
+
+.Sweden.line {
+    stroke: #220040;
+}
+
+.Switzerland.line {
+    stroke: #7c698c;
+}
+
+.Turkey.line {
+    stroke: #6f00a6;
+}
+
+.Yugoslavia.line {
+    stroke: #cc00ff;
+}
+
+.United.Kingdom.line {
+    stroke: #cf73e6;
+}
+
+.Soviet.Union.line {
+    stroke: #731d4b;
+}
+
+.Albania.selected {
+    fill: #8c0000;
+}
+
+.Austria.selected {
+    fill: #f27979;
+}
+
+.Belgium.selected {
+    fill: #401100;
+}
+
+.Czechoslovakia.selected {
+    fill: #cc5200;
+}
+
+.Danzig.selected {
+    fill: #bfa38f;
+}
+
+.Denmark.selected {
+    fill: #cc8533;
+}
+
+.Estonia.selected {
+    fill: #ffcc00;
+}
+
+.Finland.selected {
+    fill: #735c00;
+}
+
+.France.selected {
+    fill: #332e1a;
+}
+
+.Germany.selected {
+    fill: #85a600;
+}
+
+.Greece.selected {
+    fill: #f2ffbf;
+}
+
+.Hungary.selected {
+    fill: #3df255;
+}
+
+.Ireland.selected {
+    fill: #4d9957;
+}
+
+.Italy.selected {
+    fill: #00593c;
+}
+
+.Latvia.selected {
+    fill: #6cd9c3;
+}
+
+.Lithuania.selected {
+    fill: #23858c;
+}
+
+.Luxembourg.selected {
+    fill: #40d9ff;
+}
+
+.Netherlands.selected {
+    fill: #368dd9;
+}
+
+.Norway.selected {
+    fill: #1a2733;
+}
+
+.Poland.selected {
+    fill: #bfd9ff;
+}
+
+.Portugal.selected {
+    fill: #5940ff;
+}
+
+.Romania.selected {
+    fill: #3d6df2;
+}
+
+.Spain.selected {
+    fill: #1d3473;
+}
+
+.Sweden.selected {
+    fill: #220040;
+}
+
+.Switzerland.selected {
+    fill: #7c698c;
+}
+
+.Turkey.selected {
+    fill: #6f00a6;
+}
+
+.Yugoslavia.selected {
+    fill: #cc00ff;
+}
+
+.United.Kingdom.selected {
+    fill: #cf73e6;
+}
+
+.Soviet.Union.selected {
+    fill: #731d4b;
+}
+
+.country-option {
+    fill: lightgray;
+}

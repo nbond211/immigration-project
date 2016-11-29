@@ -47,24 +47,22 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
                        .scale([ 960/1.25 ])))
        .attr("stroke", "rgba(8, 81, 156, 0.2)")
        .attr("fill", "rgba(8, 81, 156, 0.6)").
-       attr("class", function(d){return d.properties.name})
+       attr("class", function(d){return d.properties.name + " country-option"})
       .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill-opacity","0.5")})
       .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill-opacity","1")})
       .on("click", selectData);
       function selectData(d){
         selectThis = d3.select(this)
         var countryName = d.properties.name
-
+        selectThis.classed("selected", !selectThis.classed("selected"));
         ////////FILTERING IMMIGRATION DATA
         immigrationData.forEach(function(dataEl){//for each year object in main data
           selectedImmigrationData.forEach(function(selectEl){// and for each year object in selected data
             if(dataEl.Year == selectEl.Year) // find the corresponding year object in the main anad selected data
               if(selectEl[countryName]){//if the selected country is already in the selected data
                 delete selectEl[countryName]//remove it from selected list
-                selectThis.style("fill","rgba(8, 81, 156, 0.6)")
               } else {// otherwise add it to the selected list
                 selectEl[countryName] = dataEl[countryName]
-                selectThis.style("fill","rgba(156, 81, 8, 0.6)")
               }
             })
         })
@@ -210,13 +208,13 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             .attr("class", "country");
 
         city.append("path")
-            .attr("class", "line")
+            .attr("class", function (d) {return d.id + " line"})
             .attr("d", function (d) {
                 return line(d.values);
-            })
-            .style("stroke", function (d) {
-                return zImmigration(d.id);
             });
+            /*.style("stroke", function (d) {
+                return zImmigration(d.id);
+            });*/
 
         city.append("text")
             .datum(function (d) {
@@ -319,11 +317,7 @@ function buildQuotaChart(newData) {
         return d.country;
     }));
     yQuota.domain([0, d3.max(newData, function (d) {
-        if (d.quota == 0) {
-            return d.immigration;
-        } else {
-            return d.quota;
-        }
+        return Math.max(d.immigration, d.quota);
     })]);
 
     g.append("g")
@@ -344,7 +338,7 @@ function buildQuotaChart(newData) {
     g.selectAll(".immigration-bar")
         .data(newData)
         .enter().append("rect")
-        .attr("class", "immigration-bar")
+        .attr("class", function (d) { return d.country + " immigration-bar selected"})
         .attr("x", function (d) {
             return xQuota(d.country);
         })
