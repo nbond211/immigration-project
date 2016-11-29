@@ -32,6 +32,13 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
         selectedQuotaData.push({"Year": element.Year})
       })
       var selectedNonQuotaData = [];
+        
+     // Setup the tool tip.  Note that this is just one example, and that many styling options are available.
+    // See original documentation for more details on styling: http://labratrevenge.com/d3-tip/
+    var tool_tip = d3.tip()
+      .attr("class", "d3-tip")
+      .offset([-8, 0])
+      d3.select("#map-svg").call(tool_tip);
 
       var svg = d3.select("#map-svg")
       .attr("preserveAspectRatio", "xMinYMin meet")
@@ -48,8 +55,15 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
        .attr("stroke", "rgba(8, 81, 156, 0.2)")
        .attr("fill", "rgba(8, 81, 156, 0.6)").
        attr("class", function(d){return d.properties.name + " country-option"})
-      .on("mouseover", function(d) {d3.select(this).style("cursor", "pointer").style("fill-opacity","0.5")})
-      .on("mouseout", function(d) {d3.select(this).style("cursor", "default").style("fill-opacity","1")})
+      .on("mouseover", function(d) {
+          d3.select(this).style("cursor", "pointer").style("fill-opacity","0.5");
+          tool_tip.html(d.properties.name);
+          tool_tip.show();
+      })
+      .on("mouseout", function(d) {
+          d3.select(this).style("cursor", "default").style("fill-opacity","1");
+          tool_tip.hide();
+      })
       .on("click", selectData);
       function selectData(d){
         selectThis = d3.select(this)
