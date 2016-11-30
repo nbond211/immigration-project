@@ -19,7 +19,10 @@
 }
 
 #map-svg {
-    background-color: white;
+    background-color: #99B3CC;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
 }
 
 #map-svg h1 {
@@ -31,30 +34,10 @@
     padding-bottom: 10px;
 }
 
-#map-svg #container {
-    width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20px;
+#map-vis-container {
     padding: 20px;
-    background-color: white;
     box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
-}
-
-.svg-container {
-    display: inline-block;
-    position: relative;
-    width: 50%;
-    padding-bottom: 32%;
-    vertical-align: top;
-    overflow: hidden;
-}
-
-.svg-content-responsive {
-    display: inline-block;
-    position: absolute;
-    top: 10px;
-    left: 0;
+    background-color: lightgrey;
 }
 
 .d3-tip {
@@ -88,6 +71,12 @@
     margin: -2px 0 0 0;
     top: 100%;
     left: 0;
+}
+
+/*Country Stylings*/
+
+.outline {
+    fill: lightgrey;
 }
 
 .Albania.line {
@@ -323,5 +312,5 @@
 }
 
 .country-option {
-    fill: lightgray;
+    fill: white;
 }
