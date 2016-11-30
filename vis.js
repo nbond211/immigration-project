@@ -121,9 +121,9 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
             margin = {
                 top: 20,
-                right: 80,
+                right: 200,
                 bottom: 30,
-                left: 50
+                left: 100
             },
             width = 960 - margin.left - margin.right,
             height = 600 - margin.top - margin.bottom,
@@ -213,7 +213,7 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             .attr("y", 6)
             .attr("dy", "0.71em")
             .attr("fill", "#000")
-            .text("Immigration, number of people");
+            .text("");
 
         var city = g.selectAll(".country")
             .data(countries)
