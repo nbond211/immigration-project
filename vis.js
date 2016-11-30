@@ -241,7 +241,7 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             })
             .attr("x", 3)
             .attr("dy", "0.35em")
-            .style("font", "10px sans-serif")
+            .style("font", "1.5em sans-serif")
             .text(function (d) {
                 return d.id;
             });
@@ -487,7 +487,7 @@ function buildNonQuotaChart(newData) {
         })
         .attr("x", 3)
         .attr("dy", "0.35em")
-        .style("font", "10px sans-serif")
+        .style("font", "1.5em sans-serif")
         .text(function (d) {
             return d.id;
         });
