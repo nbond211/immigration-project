@@ -459,7 +459,7 @@ function buildNonQuotaChart(newData) {
         .attr("y", 6)
         .attr("dy", "0.71em")
         .attr("fill", "#000")
-        .text("Temperature, ºF");
+        .text("");
 
     var nonQuota = nonQuotaG.selectAll(".nonQuota")
         .data(classes)
