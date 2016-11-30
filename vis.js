@@ -43,8 +43,6 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
       var svg = d3.select("#map-svg")
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "0 0 " + 960 + " "  + 600)
-      //class to make it responsive
-     .classed("svg-content-responsive", true)
       .selectAll("path")
       .data(mapdata.features)
       .enter()
@@ -54,7 +52,11 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
                        .scale([ 960/1.25 ])))
        .attr("stroke", "rgba(8, 81, 156, 0.2)")
        .attr("fill", "rgba(8, 81, 156, 0.6)").
-       attr("class", function(d){return d.properties.name + " country-option"})
+       attr("class", function(d){
+        if(d.properties.outline){
+            return "outline";
+        }
+        return d.properties.name + " country-option"})
       .on("mouseover", function(d) {
           d3.select(this).style("cursor", "pointer").style("fill-opacity","0.5");
           tool_tip.html(d.properties.name);
@@ -103,7 +105,6 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
        } else {//otherwise add it
         selectedQuotaData.columns.push(countryName)
       }
-      console.log(quotaData, selectedQuotaData)
       buildImmigrationChart(selectedImmigrationData, selectedQuotaData, nonQuotaData)// re-render rest of charts
     }
     buildImmigrationChart(selectedImmigrationData, quotaData, nonQuotaData)// first render of charts
@@ -118,8 +119,6 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
         var svg = d3.select("#immigration-svg")
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
-        //class to make it responsive
-       .classed("svg-content-responsive", true),
             margin = {
                 top: 20,
                 right: 80,
@@ -310,8 +309,6 @@ function buildQuotaChart(newData) {
     var quotaSvg = d3.select("#quota-svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
-        //class to make it responsive
-       .classed("svg-content-responsive", true),
         quotaMargin = {
             top: 20,
             right: 20,
@@ -387,8 +384,6 @@ function buildNonQuotaChart(newData) {
     var nonQuotaSvg = d3.select("#non-quota-svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
-        //class to make it responsive
-       .classed("svg-content-responsive", true),
         nonQuotaMargin = {
             top: 20,
             right: 80,
