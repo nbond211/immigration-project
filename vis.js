@@ -35,6 +35,7 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
         
      var tooltip = d3.select(".container-fluid")
 	.append("div")
+    .attr('class', 'tooltip')
 	.style("position", "absolute")
 	.style("z-index", "10")
 	.style("visibility", "hidden");
@@ -386,9 +387,9 @@ function buildNonQuotaChart(newData) {
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
         nonQuotaMargin = {
             top: 20,
-            right: 80,
+            right: 200,
             bottom: 30,
-            left: 50
+            left: 100
         },
         nonQuotaWidth = 960 - nonQuotaMargin.left - nonQuotaMargin.right,
         nonQuotaHeight = 600 - nonQuotaMargin.top - nonQuotaMargin.bottom,
@@ -411,7 +412,7 @@ function buildNonQuotaChart(newData) {
         return;
     }
 
-    var namesOfClasses = ["Year", "Ministers and Professors and their wives and children", "Ministers and their wives and children", "Professors and their wives and children", "Students"];
+    var namesOfClasses = ["Year", "Ministers and Professors", "Ministers", "Professors", "Students"];
 
     var classes = namesOfClasses.slice(1).map(function (id) {
         return {
@@ -487,7 +488,7 @@ function buildNonQuotaChart(newData) {
         })
         .attr("x", 3)
         .attr("dy", "0.35em")
-        .style("font", "1.5em sans-serif")
+        .style("font", "1.2em sans-serif")
         .text(function (d) {
             return d.id;
         });
