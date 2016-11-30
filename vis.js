@@ -62,7 +62,7 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
           tooltip.text(d.properties.name);
           tooltip.style("visibility", "visible");
       })
-      .on("mousemove", function(){return tooltip.style("top", (event.pageY)+"px").style("left",(event.pageX + 25) +"px");})
+      .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY)+"px").style("left",(d3.event.pageX + 25) +"px");})
       .on("mouseout", function(d) {
           d3.select(this).style("cursor", "default").style("fill-opacity","1");
           tooltip.style("visibility", "hidden");
