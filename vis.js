@@ -109,8 +109,13 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
       buildImmigrationChart(selectedImmigrationData, selectedQuotaData, nonQuotaData)// re-render rest of charts
     }
     buildImmigrationChart(selectedImmigrationData, quotaData, nonQuotaData)// first render of charts
-  })
+    
+  });
+    
 };
+
+
+
         /////////////////////////////////////
         // Immigration Over Time   //
         ///////////////////////////////////
@@ -121,7 +126,7 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
             margin = {
-                top: 20,
+                top: 100,
                 right: 200,
                 bottom: 30,
                 left: 100
@@ -129,6 +134,13 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             width = 960 - margin.left - margin.right,
             height = 600 - margin.top - margin.bottom,
             g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    
+    svg.append("text")
+        .attr("x", ((width + margin.left + margin.right) / 2))             
+        .attr("y", (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "2em")
+        .text("Immigrants Admitted into the US Anually");
 
         var xImmigration = d3.scaleTime().range([0, width]),
             yImmigration = d3.scaleLinear().range([height, 0]),
@@ -214,7 +226,7 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             .attr("y", 6)
             .attr("dy", "0.71em")
             .attr("fill", "#000")
-            .text("");
+            .text("number of immigrants");
 
         var city = g.selectAll(".country")
             .data(countries)
