@@ -334,13 +334,20 @@ function buildQuotaChart(newData) {
     .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
         quotaMargin = {
-            top: 20,
+            top: 100,
             right: 20,
             bottom: 30,
             left: 100
         },
         quotaWidth = 960 - quotaMargin.left - quotaMargin.right,
         quotaHeight = 600 - quotaMargin.top - quotaMargin.bottom;
+    
+    quotaSvg.append("text")
+        .attr("x", ((width + margin.left + margin.right) / 2))             
+        .attr("y", (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "2em")
+        .text("Quotas Allotted and Immigrants Admitted");
 
     var xQuota = d3.scaleBand().rangeRound([0, quotaWidth]).padding(0.1),
         yQuota = d3.scaleLinear().rangeRound([quotaHeight, 0]);
@@ -409,7 +416,7 @@ function buildNonQuotaChart(newData) {
     .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
         nonQuotaMargin = {
-            top: 20,
+            top: 100,
             right: 200,
             bottom: 30,
             left: 100
@@ -417,6 +424,13 @@ function buildNonQuotaChart(newData) {
         nonQuotaWidth = 960 - nonQuotaMargin.left - nonQuotaMargin.right,
         nonQuotaHeight = 600 - nonQuotaMargin.top - nonQuotaMargin.bottom,
         nonQuotaG = nonQuotaSvg.append("g").attr("transform", "translate(" + nonQuotaMargin.left + "," + nonQuotaMargin.top + ")");
+    
+    nonQuotaSvg.append("text")
+        .attr("x", ((width + margin.left + margin.right) / 2))
+        .attr("y", (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "2em")
+        .text("Nonquota Immigrants Admitted Under the Immigration Act of 1924");
 
     var xNonQuota = d3.scaleTime().range([0, nonQuotaWidth]),
         yNonQuota = d3.scaleLinear().range([nonQuotaHeight, 0]),

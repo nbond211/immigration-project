@@ -37157,6 +37157,7 @@
 {
       "type": "Feature",
       "properties": {
+        "displayOnly": true,
         "name": "Macedonia"
       },
       "geometry": {
