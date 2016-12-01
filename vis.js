@@ -323,13 +323,20 @@ function buildQuotaChart(newData) {
     .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
         quotaMargin = {
-            top: 20,
+            top: 100,
             right: 20,
             bottom: 30,
             left: 100
         },
         quotaWidth = 960 - quotaMargin.left - quotaMargin.right,
         quotaHeight = 600 - quotaMargin.top - quotaMargin.bottom;
+    
+    quotaSvg.append("text")
+        .attr("x", ((width + margin.left + margin.right) / 2))             
+        .attr("y", (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "2em")
+        .text("Quotas Allotted and Immigrants Admitted");
 
     var xQuota = d3.scaleBand().rangeRound([0, quotaWidth]).padding(0.1),
         yQuota = d3.scaleLinear().rangeRound([quotaHeight, 0]);
