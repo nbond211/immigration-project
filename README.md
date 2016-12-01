@@ -20,3 +20,4 @@ General:
 - Animation
 - Add thing that tells us what years we are brushing
 - add line for year quotas start
+- change color encoding to a legend at the side of the visuals
