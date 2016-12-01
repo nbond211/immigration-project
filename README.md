@@ -21,3 +21,4 @@ General:
 - Add thing that tells us what years we are brushing
 - add line for year quotas start
 - change color encoding to a legend at the side of the visuals
+- Change color of ministers & professors line to dashed combo of color of ministers and color professors line
