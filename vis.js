@@ -58,6 +58,7 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
         }
         return d.properties.name + " country-option"})
       .on("mouseover", function(d) {
+          console.log(d.properties);
         if(!d.properties.displayOnly){
           d3.select(this).style("cursor", "pointer").style("fill-opacity","0.5");
           tooltip.text(d.properties.name);
@@ -416,7 +417,7 @@ function buildNonQuotaChart(newData) {
     .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + 960 + " "  + 600)
         nonQuotaMargin = {
-            top: 20,
+            top: 100,
             right: 200,
             bottom: 30,
             left: 100
@@ -424,6 +425,13 @@ function buildNonQuotaChart(newData) {
         nonQuotaWidth = 960 - nonQuotaMargin.left - nonQuotaMargin.right,
         nonQuotaHeight = 600 - nonQuotaMargin.top - nonQuotaMargin.bottom,
         nonQuotaG = nonQuotaSvg.append("g").attr("transform", "translate(" + nonQuotaMargin.left + "," + nonQuotaMargin.top + ")");
+    
+    nonQuotaSvg.append("text")
+        .attr("x", ((width + margin.left + margin.right) / 2))
+        .attr("y", (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "2em")
+        .text("Nonquota Immigrants Admitted Under the Immigration Act of 1924");
 
     var xNonQuota = d3.scaleTime().range([0, nonQuotaWidth]),
         yNonQuota = d3.scaleLinear().range([nonQuotaHeight, 0]),
