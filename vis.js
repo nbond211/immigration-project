@@ -58,7 +58,6 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
         }
         return d.properties.name + " country-option"})
       .on("mouseover", function(d) {
-          console.log(d.properties);
         if(!d.properties.displayOnly){
           d3.select(this).style("cursor", "pointer").style("fill-opacity","0.5");
           tooltip.text(d.properties.name);
