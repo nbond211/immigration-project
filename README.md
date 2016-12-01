@@ -20,3 +20,5 @@ General:
 - Animation
 - Add thing that tells us what years we are brushing
 - add line for year quotas start
+
+Color website: http://phrogz.net/css/distinct-colors.html
