@@ -214,11 +214,52 @@
         ]
       }
     },
-
 {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "name": "Andorra",
+        "displayOnly": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1.7060546875,
+              42.503320312499994
+            ],
+            [
+              1.4862304687500227,
+              42.434472656249994
+            ],
+            [
+              1.4281250000000227,
+              42.461328124999994
+            ],
+            [
+              1.4283203125000057,
+              42.5958984375
+            ],
+            [
+              1.5013671875000227,
+              42.642724609374994
+            ],
+            [
+              1.7098632812500227,
+              42.604443359375
+            ],
+            [
+              1.7060546875,
+              42.503320312499994
+            ]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "displayOnly": true,
         "name": "Kosovo"
       },
       "geometry": {
@@ -2110,7 +2151,8 @@
 {
       "type": "Feature",
       "properties": {
-        "name": "Aland"
+        "name": "Aland",
+        "displayOnly": true
       },
       "geometry": {
         "type": "Polygon",
@@ -37288,7 +37330,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Iran"
       },
       "geometry": {
@@ -38600,7 +38642,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Syria"
       },
       "geometry": {
@@ -38942,7 +38984,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Iraq"
       },
       "geometry": {
@@ -39400,7 +39442,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Slovenia"
       },
       "geometry": {
@@ -39622,7 +39664,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Bulgaria"
       },
       "geometry": {
@@ -40000,7 +40042,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Bosnia and Herz."
       },
       "geometry": {
@@ -40262,7 +40304,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Croatia"
       },
       "geometry": {
@@ -40878,7 +40920,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Montenegro"
       },
       "geometry": {
@@ -41028,7 +41070,7 @@
     {
       "type": "Feature",
       "properties": {
-        "outline": true,
+        "displayOnly": true,
         "name": "Serbia"
       },
       "geometry": {

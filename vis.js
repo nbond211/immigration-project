@@ -32,7 +32,7 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
         selectedQuotaData.push({"Year": element.Year})
       })
       var selectedNonQuotaData = [];
-        
+
      var tooltip = d3.select(".container-fluid")
 	.append("div")
     .attr('class', 'tooltip')
@@ -47,28 +47,39 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
       .data(mapdata.features)
       .enter()
       .append("path")
-       .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ])
-                       .translate([ 960/2, 600/2 ])
-                       .scale([ 960/1.25 ])))
-       .attr("stroke", "rgba(8, 81, 156, 0.2)")
-       .attr("fill", "rgba(8, 81, 156, 0.6)").
-       attr("class", function(d){
-        if(d.properties.outline){
-            return "outline";
+      .attr("d", d3.geoPath(d3.geoMercator().center([ 13, 52 ])
+       .translate([ 960/2, 600/2 ])
+       .scale([ 960/1.25 ])))
+      .attr("stroke", "rgba(8, 81, 156, 0.2)")
+      .attr("fill", "rgba(8, 81, 156, 0.6)").
+      attr("class", function(d){
+        if(d.properties.displayOnly){
+          return "displayOnly";
         }
         return d.properties.name + " country-option"})
       .on("mouseover", function(d) {
+        if(!d.properties.displayOnly){
           d3.select(this).style("cursor", "pointer").style("fill-opacity","0.5");
           tooltip.text(d.properties.name);
           tooltip.style("visibility", "visible");
+        }
       })
-      .on("mousemove", function(){return tooltip.style("top", (event.pageY)+"px").style("left",(event.pageX + 25) +"px");})
+      .on("mousemove", function(d){
+        if(!d.properties.displayOnly){
+          return tooltip.style("top", (d3.event.pageY)+"px").style("left",(d3.event.pageX + 25) +"px");
+        }
+      })
       .on("mouseout", function(d) {
+        if(!d.properties.displayOnly){
           d3.select(this).style("cursor", "default").style("fill-opacity","1");
           tooltip.style("visibility", "hidden");
+        }
       })
       .on("click", selectData);
       function selectData(d){
+        if(d.properties.displayOnly){
+          return;
+        }
         selectThis = d3.select(this)
         var countryName = d.properties.name
         selectThis.classed("selected", !selectThis.classed("selected"));
@@ -109,9 +120,9 @@ function buildMap(immigrationData, quotaData, nonQuotaData) {
       buildImmigrationChart(selectedImmigrationData, selectedQuotaData, nonQuotaData)// re-render rest of charts
     }
     buildImmigrationChart(selectedImmigrationData, quotaData, nonQuotaData)// first render of charts
-    
+
   });
-    
+
 };
 
 
@@ -134,11 +145,11 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             width = 960 - margin.left - margin.right,
             height = 600 - margin.top - margin.bottom,
             g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    
+
     svg.append("text")
-        .attr("x", ((width + margin.left + margin.right) / 2))             
+        .attr("x", ((width + margin.left + margin.right) / 2))
         .attr("y", (margin.top / 2))
-        .attr("text-anchor", "middle")  
+        .attr("text-anchor", "middle")
         .style("font-size", "2em")
         .text("Immigrants Admitted into the US Anually");
 
