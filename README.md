@@ -12,14 +12,9 @@ Default Chart Display:
 - Have all charts but the map inform user that no country has been select on load
 
 General:
-- Add titles to all graphs
-    - working titles are in comments of script above each function generating said chart
--fix/add labels
-    -non-quota chart has "tempurature" as y axis label LOL
 - Add storyingtelling text between/above/below charts (?)
 - Animation
-- Add thing that tells us what years we are brushing
 - add line for year quotas start
-- change color encoding to a legend at the side of the visuals
+- change color encoding to a legend at the side of the nonquota chart
 - Change color of ministers & professors line to dashed combo of color of ministers and color professors line
 Color website: http://phrogz.net/css/distinct-colors.html
