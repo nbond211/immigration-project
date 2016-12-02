@@ -146,12 +146,14 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             height = 600 - margin.top - margin.bottom,
             g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append("text")
+        title = svg.append("g")
+
+        title.append("text")
         .attr("x", ((width + margin.left + margin.right) / 2))
         .attr("y", (margin.top / 2))
         .attr("text-anchor", "middle")
         .style("font-size", "2em")
-        .text("Immigrants Admitted into the US Anually");
+        .text("Immigrants Admitted into the US Annually For Selected Countries")
 
         var xImmigration = d3.scaleTime().range([0, width]),
             yImmigration = d3.scaleLinear().range([height, 0]),
@@ -189,19 +191,6 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             };
         });
 
-        var brush = d3.brushX()
-            .extent([[0, 0], [width, height]])
-            .on("brush end", brushed);
-
-        var context = svg.append("g")
-            .attr("class", "context")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        context.append("g")
-            .attr("class", "brush")
-            .call(brush)
-            .call(brush.move, [0,0]);
-
 
         xImmigration.domain(d3.extent(immigrationData, function (d) {
             return parseTime(d.Year);
@@ -224,6 +213,22 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             return c.id;
         }));
 
+        var minYear = xImmigration.domain()[0].getFullYear(),
+        maxYear = xImmigration.domain()[1].getFullYear();
+
+        var brush = d3.brushX()
+            .extent([[0, 0], [width, height]])
+            .on("brush end", brushed);
+
+        var context = svg.append("g")
+            .attr("class", "context")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        context.append("g")
+            .attr("class", "brush")
+            .call(brush)
+            .call(brush.move, [0,0]);
+
         g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
@@ -239,12 +244,40 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             .attr("fill", "#000")
             .text("number of immigrants");
 
-        var city = g.selectAll(".country")
+var legend = svg.append("g")
+     .attr("transform", "translate("+ margin.left+"," + margin.top + ")")
+    .attr("class", "legend")
+    .attr("x", 25)
+    .attr("y", 25)
+    .attr("height", 100)
+    .attr("width", 100)
+    .selectAll('.cell')
+    .data(zImmigration.domain())
+    .enter()
+
+    legend.append("rect")
+    .attr("transform", "translate(" + (width - 60) + "," + 0 +")")
+    .attr("x", 65)
+    .attr("y", function(d,i){ return (i * 24) - 12})
+    .attr("width", 10)
+    .attr("height", 20)
+    .attr("class", function(d) { return d + " selected" })
+legend.append("text")
+    .attr("transform", "translate(" + (width) + "," + 0 +")")
+    .attr("x", 24)
+    .attr("y", function(d,i){ return (i * 24)})
+    .attr("dy", "0.35em")
+    .style("font", "1.5em sans-serif")
+    .text(function (d) {
+        return d;
+    });
+
+        var country = g.selectAll(".country")
             .data(countries)
             .enter().append("g")
             .attr("class", "country");
 
-        city.append("path")
+        country.append("path")
             .attr("class", function (d) {return d.id + " line"})
             .attr("d", function (d) {
                 return line(d.values);
@@ -253,29 +286,11 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
                 return zImmigration(d.id);
             });*/
 
-        city.append("text")
-            .datum(function (d) {
-                return {
-                    id: d.id,
-                    value: d.values[d.values.length - 1]
-                };
-            })
-            .attr("transform", function (d) {
-                return "translate(" + xImmigration(d.value.year) + "," + yImmigration(d.value.immigration) + ")";
-            })
-            .attr("x", 3)
-            .attr("dy", "0.35em")
-            .style("font", "1.5em sans-serif")
-            .text(function (d) {
-                return d.id;
-            });
-
         function type(d, _, columns) {
             d.year = parseTime(d.year);
             for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
             return d;
         }
-
         function brushed() {
             if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
             var s = d3.event.selection || xImmigration.range();
@@ -285,8 +300,8 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
             /*svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
                 .scale(width / (s[1] - s[0]))
                 .translate(-s[0], 0));*/
-            var minYear = s[0];
-            var maxYear = s[1];
+            var brushRangeMin = s[0];
+            var brushRangeMax = s[1];
             var newData = [];
 
             for (var i = 0; i < countries.length; i++) {
@@ -296,39 +311,46 @@ function buildImmigrationChart(immigrationData, quotaData, nonQuotaData) {
                 var totalImmigration = 0;
                 var totalQuota = 0;
 
+                //swap the min and max around so that we can find the lowest year in the brush range
+                var a =minYear
+                minYear=maxYear
+                maxYear=a
                 for (var j = 0; j < immigrationValues.length; j++) {
-                    if (xImmigration(immigrationValues[j].year) >= minYear && xImmigration(immigrationValues[j].year) <= maxYear) {
-
-                        totalImmigration += immigrationValues[j].immigration;
-                        totalQuota += quotaValues[j].quota;
+                  if (xImmigration(immigrationValues[j].year) >= brushRangeMin && xImmigration(immigrationValues[j].year) <= brushRangeMax) {
+                    totalImmigration += immigrationValues[j].immigration;
+                    totalQuota += quotaValues[j].quota;
+                    if(immigrationValues[j].year.getFullYear() < minYear){
+                      minYear = immigrationValues[j].year.getFullYear()
+                    } else if(immigrationValues[j].year.getFullYear() > maxYear){
+                      maxYear = immigrationValues[j].year.getFullYear()
                     }
+                  }
                 }
 
                 var obj = {
-                    country: country,
-                    immigration: totalImmigration,
-                    quota: totalQuota
+                  country: country,
+                  immigration: totalImmigration,
+                  quota: totalQuota,
                 };
                 newData.push(obj);
-            }
+              }
+              buildQuotaChart(newData, [minYear, maxYear]);
 
-            buildQuotaChart(newData);
+              var dataFiltered = nonQuotaData.filter(function (d) {
+                return (xImmigration(parseTime(d.Year)) >= brushRangeMin && xImmigration(parseTime(d.Year)) <= brushRangeMax);
+              });
 
-            var dataFiltered = nonQuotaData.filter(function (d) {
-                return (xImmigration(parseTime(d.Year)) >= minYear && xImmigration(parseTime(d.Year)) <= maxYear);
-            });
-
-            buildNonQuotaChart(dataFiltered);
+            buildNonQuotaChart(dataFiltered, [minYear, maxYear]);
 
         }
 
-        buildNonQuotaChart(nonQuotaData);
+        buildNonQuotaChart(nonQuotaData, [minYear, maxYear]);
         brushed();
     }
         ////////////////////////////////////////////////////////////
         // Actual Immigration Level vs Allotted Quota   //
         //////////////////////////////////////////////////////////
-function buildQuotaChart(newData) {
+function buildQuotaChart(newData, yearRange) {
     $("#quota-svg").empty();
     var quotaSvg = d3.select("#quota-svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
@@ -341,13 +363,21 @@ function buildQuotaChart(newData) {
         },
         quotaWidth = 960 - quotaMargin.left - quotaMargin.right,
         quotaHeight = 600 - quotaMargin.top - quotaMargin.bottom;
-    
+
     quotaSvg.append("text")
-        .attr("x", ((width + margin.left + margin.right) / 2))             
+        .attr("x", ((width + margin.left + margin.right) / 2))
         .attr("y", (margin.top / 2))
-        .attr("text-anchor", "middle")  
+        .attr("text-anchor", "middle")
         .style("font-size", "2em")
-        .text("Quotas Allotted and Immigrants Admitted");
+        .text("Quotas Allotted and Immigrants Admitted For Selected Countries");
+
+    quotaSvg.append("text")
+        .attr("x", ((width + margin.left + margin.right) / 2))
+        .attr("y", margin.top - 10)
+        .attr("text-anchor", "middle")
+        .style("font-size", "2em")
+        .text(yearRange[0] + ' to ' + yearRange[1])
+        .attr('class', 'yearRange');
 
     var xQuota = d3.scaleBand().rangeRound([0, quotaWidth]).padding(0.1),
         yQuota = d3.scaleLinear().rangeRound([quotaHeight, 0]);
@@ -410,7 +440,7 @@ function buildQuotaChart(newData) {
         //////////////////////////////////////////////
         // Immigrants Exempt from Quota   //
         /////////////////////////////////////////////
-function buildNonQuotaChart(newData) {
+function buildNonQuotaChart(newData, yearRange) {
     $("#non-quota-svg").empty();
     var nonQuotaSvg = d3.select("#non-quota-svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
@@ -424,13 +454,20 @@ function buildNonQuotaChart(newData) {
         nonQuotaWidth = 960 - nonQuotaMargin.left - nonQuotaMargin.right,
         nonQuotaHeight = 600 - nonQuotaMargin.top - nonQuotaMargin.bottom,
         nonQuotaG = nonQuotaSvg.append("g").attr("transform", "translate(" + nonQuotaMargin.left + "," + nonQuotaMargin.top + ")");
-    
+
     nonQuotaSvg.append("text")
         .attr("x", ((width + margin.left + margin.right) / 2))
         .attr("y", (margin.top / 2))
         .attr("text-anchor", "middle")
         .style("font-size", "2em")
         .text("Nonquota Immigrants Admitted Under the Immigration Act of 1924");
+    nonQuotaSvg.append("text")
+        .attr("x", ((width + margin.left + margin.right) / 2))
+        .attr("y", margin.top - 10)
+        .attr("text-anchor", "middle")
+        .style("font-size", "2em")
+        .text(yearRange[0] + ' to ' + yearRange[1])
+        .attr('class', 'yearRange');
 
     var xNonQuota = d3.scaleTime().range([0, nonQuotaWidth]),
         yNonQuota = d3.scaleLinear().range([nonQuotaHeight, 0]),
