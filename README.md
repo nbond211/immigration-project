@@ -1,3 +1,5 @@
+This project was developed on Windows machines and tested with Firefox and Chrome.
+
 # immigration-project
 This project visualizes immigration to the US from Europe in the early 20th century. This project has a specific focus on the quota system instituted by the Immigration Act of 1924
 ### TODO
