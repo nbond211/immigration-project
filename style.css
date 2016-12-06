@@ -6,6 +6,11 @@ text {
     display: none;
 }
 
+.intro {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
 .line {
     fill: none;
     stroke: steelblue;
